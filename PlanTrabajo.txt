@@ -1,0 +1,837 @@
+================================================================================
+                    PLAN DE TRABAJO - APP GESTOR DE CONTRASEÑAS "BÓVEDA"
+================================================================================
+
+1. INFORMACIÓN DEL PROYECTO
+================================================================================
+
+Nombre: Bóveda (Password Manager)
+Plataforma: Mobile (iOS + Android)
+Stack Recomendado: React Native + TypeScript
+Duración estimada: 4-5 semanas
+Equipo: 1 Dev (tú)
+
+
+2. ESTRUCTURA DEL PROYECTO
+================================================================================
+
+boveda-app/
+├── src/
+│   ├── screens/          # Pantallas principales
+│   │   ├── SplashScreen.tsx
+│   │   ├── SetupBoveda.tsx
+│   │   ├── LoginBoveda.tsx
+│   │   ├── VaultScreen.tsx
+│   │   └── AddPasswordScreen.tsx
+│   ├── components/       # Componentes reutilizables
+│   │   ├── PasswordCard.tsx
+│   │   ├── PasswordInput.tsx
+│   │   └── ModalAddPassword.tsx
+│   ├── services/         # Lógica de negocio
+│   │   ├── cryptoService.ts      # Encriptación
+│   │   ├── storageService.ts     # AsyncStorage
+│   │   └── passwordService.ts    # CRUD
+│   ├── hooks/            # Custom hooks
+│   │   ├── useBoveda.ts
+│   │   └── useEncryption.ts
+│   ├── types/            # TypeScript interfaces
+│   │   └── index.ts
+│   ├── utils/
+│   │   └── validation.ts
+│   └── App.tsx
+├── package.json
+└── app.json
+
+
+3. STACK TECNOLÓGICO FINAL
+================================================================================
+
+DEPENDENCIAS PRINCIPALES:
+
+{
+  "dependencies": {
+    "react-native": "0.72.0",
+    "react-native-sodium": "0.3.2",           // Criptografía
+    "react-native-async-storage": "1.21.0",   // Almacenamiento local
+    "react-native-uuid": "2.0.1",             // Generar IDs
+    "@react-navigation/native": "6.1.0",      // Navegación
+    "@react-navigation/stack": "6.3.0",
+    "react-native-screens": "3.25.0",
+    "react-native-safe-area-context": "4.6.0",
+    "react-native-gesture-handler": "2.13.0",
+    "react-native-clipboard": "1.12.1",       // Copy to clipboard
+    "@react-native-community/hooks": "3.0.0"
+  }
+}
+
+
+4. ESTRUCTURA DE DATOS
+================================================================================
+
+TIPOS PRINCIPALES:
+
+interface Credencial {
+  id: string;              // UUID único
+  etiqueta: string;        // "Google", "Twitter", etc
+  contrasena: string;      // Encriptada
+  fechaCreacion: number;   // Timestamp
+  ultimaModificacion: number;
+}
+
+interface EstadoBoveda {
+  estaConfigurada: boolean;
+  estaDesbloqueada: boolean;
+  credenciales: Credencial[];
+  intentosFallidos: number;
+}
+
+
+5. PLAN POR SPRINTS
+================================================================================
+
+SPRINT 1: SETUP & NAVEGACIÓN (Semana 1)
+================================================================================
+
+Objetivo: Estructura base funcional sin seguridad
+
+TAREAS:
+
+1. Setup proyecto React Native + Typescript
+   Duración: 2h
+   Prioridad: ALTA
+   Descripción: Crear proyecto con Expo, configurar TypeScript
+
+2. Configurar navegación Stack
+   Duración: 3h
+   Prioridad: ALTA
+   Descripción: Navegar entre pantallas de forma fluida
+
+3. Crear pantalla Splash (intro)
+   Duración: 2h
+   Prioridad: MEDIA
+   Descripción: Mostrar logo por 2 segundos
+
+4. Crear pantalla SetupBoveda (1ª contraseña)
+   Duración: 3h
+   Prioridad: ALTA
+   Descripción: Interfaz para crear contraseña maestra
+
+5. UI: inputs, botones, colores
+   Duración: 4h
+   Prioridad: MEDIA
+   Descripción: Diseño visual básico consistente
+
+6. Pruebas en emulador/dispositivo
+   Duración: 2h
+   Prioridad: ALTA
+   Descripción: Verificar funcionamiento en dispositivo real
+
+ENTREGABLE: App navega entre pantallas, UI básica funcional
+TOTAL HORAS: 16h
+
+
+SPRINT 2: ALMACENAMIENTO & SEGURIDAD (Semana 2)
+================================================================================
+
+Objetivo: Guardar y validar contraseña maestra
+
+TAREAS:
+
+1. Implementar cryptoService.ts con libsodium
+   Duración: 6h
+   Prioridad: CRÍTICO
+   Descripción: Servicio de encriptación completo
+
+   1.1 Generar salt aleatorio
+       Duración: 2h
+       Prioridad: CRÍTICO
+
+   1.2 Derivar contraseña con Argon2id
+       Duración: 2h
+       Prioridad: CRÍTICO
+
+   1.3 Función hash y verificación
+       Duración: 2h
+       Prioridad: CRÍTICO
+
+2. Implementar storageService.ts con AsyncStorage
+   Duración: 3h
+   Prioridad: ALTA
+   Descripción: Guardar datos encriptados en dispositivo
+
+3. Crear useBoveda.ts hook
+   Duración: 2h
+   Prioridad: ALTA
+   Descripción: Hook personalizado para gestionar estado
+
+4. Guardar contraseña maestra hash en dispositivo
+   Duración: 2h
+   Prioridad: ALTA
+   Descripción: Persistencia segura
+
+5. Pantalla LoginBoveda con validación
+   Duración: 3h
+   Prioridad: ALTA
+   Descripción: Ingresar contraseña y validar
+
+6. Pruebas unitarias seguridad
+   Duración: 3h
+   Prioridad: ALTA
+   Descripción: Tests para funciones críticas
+
+ENTREGABLE: Puedes crear contraseña maestra y loguearte
+TOTAL HORAS: 19h
+
+
+SPRINT 3: CRUD DE CREDENCIALES (Semana 3)
+================================================================================
+
+Objetivo: Guardar y mostrar contraseñas
+
+TAREAS:
+
+1. Crear passwordService.ts (CRUD)
+   Duración: 4h
+   Prioridad: ALTA
+   
+   1.1 addPassword()
+       Duración: 1h
+       Descripción: Agregar nueva credencial
+   
+   1.2 getPasswords()
+       Duración: 1h
+       Descripción: Obtener lista de contraseñas
+   
+   1.3 deletePassword()
+       Duración: 1h
+       Descripción: Eliminar credencial
+   
+   1.4 updatePassword()
+       Duración: 1h
+       Descripción: Editar credencial existente
+
+2. Encriptar cada contraseña guardada
+   Duración: 3h
+   Prioridad: CRÍTICO
+   Descripción: Cada contraseña se guarda encriptada
+
+3. Pantalla VaultScreen (lista de contraseñas)
+   Duración: 4h
+   Prioridad: ALTA
+   Descripción: Mostrar todas las credenciales
+
+4. Componente PasswordCard (mostrar etiqueta)
+   Duración: 2h
+   Prioridad: ALTA
+   Descripción: Tarjeta para cada contraseña
+
+5. Botón "Copiar" con confirmación
+   Duración: 2h
+   Prioridad: MEDIA
+   Descripción: Copiar contraseña al clipboard
+
+6. Animación al copiar (visual feedback)
+   Duración: 2h
+   Prioridad: BAJA
+   Descripción: Toast o notificación visual
+
+ENTREGABLE: Ves lista de contraseñas guardadas y puedes copiarlas
+TOTAL HORAS: 17h
+
+
+SPRINT 4: AGREGAR CONTRASEÑAS (Semana 4)
+================================================================================
+
+Objetivo: Crear y guardar nuevas credenciales
+
+TAREAS:
+
+1. Pantalla AddPasswordScreen
+   Duración: 3h
+   Prioridad: ALTA
+   Descripción: Interfaz para agregar nueva contraseña
+
+2. Componente PasswordInput mejorado
+   Duración: 2h
+   Prioridad: MEDIA
+   Descripción: Input especializado para contraseñas
+
+3. Validaciones (campos no vacíos, etc)
+   Duración: 2h
+   Prioridad: ALTA
+   Descripción: Validar datos antes de guardar
+
+4. Botón mostrar/ocultar contraseña
+   Duración: 2h
+   Prioridad: MEDIA
+   Descripción: Toggle para ver/ocultar
+
+5. Indicador de fuerza de contraseña
+   Duración: 2h
+   Prioridad: BAJA
+   Descripción: Visual de fortaleza en tiempo real
+
+6. Guardar nueva credencial
+   Duración: 2h
+   Prioridad: ALTA
+   Descripción: Persistencia en base de datos
+
+7. Feedback visual (toast/alert)
+   Duración: 1h
+   Prioridad: MEDIA
+   Descripción: Notificar éxito
+
+8. Volver a pantalla Vault después guardar
+   Duración: 1h
+   Prioridad: ALTA
+   Descripción: Navegación correcta
+
+ENTREGABLE: Puedes crear y guardar nuevas contraseñas
+TOTAL HORAS: 15h
+
+
+SPRINT 5: PULIDO & EXTRAS (Semana 5)
+================================================================================
+
+Objetivo: Mejorar UX y seguridad
+
+TAREAS:
+
+1. Limpiar memoria después de X tiempo inactivo
+   Duración: 3h
+   Prioridad: CRÍTICO
+   Descripción: Cerrar sesión automática después 5 min
+
+2. Botón "Cerrar sesión"
+   Duración: 1h
+   Prioridad: ALTA
+   Descripción: Botón para logout manual
+
+3. Editar contraseñas guardadas
+   Duración: 2h
+   Prioridad: MEDIA
+   Descripción: Modificar credenciales existentes
+
+4. Eliminar contraseñas con confirmación
+   Duración: 2h
+   Prioridad: MEDIA
+   Descripción: Dialog de confirmación antes eliminar
+
+5. Búsqueda en la lista de contraseñas
+   Duración: 2h
+   Prioridad: BAJA
+   Descripción: Filtrar credenciales por etiqueta
+
+6. Mejorar UI (colores, iconos, temas)
+   Duración: 4h
+   Prioridad: MEDIA
+   Descripción: Polish visual de la app
+
+7. Testing completo (casos borde)
+   Duración: 4h
+   Prioridad: ALTA
+   Descripción: QA exhaustivo
+
+8. Documentación y cleanup código
+   Duración: 2h
+   Prioridad: MEDIA
+   Descripción: Comentarios y refactorización
+
+ENTREGABLE: App completamente funcional y pulida
+TOTAL HORAS: 20h
+
+
+6. FLUJO DE USUARIO DETALLADO
+================================================================================
+
+FLUJO 1: PRIMERA VEZ (Setup)
+────────────────────────────
+
+App inicia → SplashScreen (2seg)
+           ↓
+     ¿Bóveda existe?
+     ├─ NO → SetupBoveda
+     │        • Pide crear contraseña maestra
+     │        • Valida fuerza
+     │        • Guarda hash + salt en AsyncStorage
+     │        • Navega a LoginBoveda
+     │
+     └─ SÍ → LoginBoveda
+
+
+FLUJO 2: INICIOS POSTERIORES (Login)
+────────────────────────────────────
+
+App inicia → SplashScreen
+           ↓
+     LoginBoveda
+     • Pide contraseña maestra
+     • Valida contra hash guardado
+     • Si OK → Desencripta credenciales
+     • Navega a VaultScreen
+
+
+FLUJO 3: VER CONTRASEÑAS (Vault)
+────────────────────────────────
+
+VaultScreen
+├─ Lista de credenciales
+│  └─ Muestra solo ETIQUETA (no contraseña)
+│     • Google
+│     • Twitter
+│     • Email
+│
+├─ Cada PasswordCard tiene:
+│  ├─ [Icono]  Etiqueta
+│  └─ [Copiar] [Editar] [Eliminar]
+│
+└─ Botón flotante [+] para agregar
+
+
+FLUJO 4: AGREGAR CONTRASEÑA (Add)
+──────────────────────────────────
+
+Botón [+] en Vault
+  ↓
+AddPasswordScreen
+├─ Campo: Etiqueta (ej: "Google")
+├─ Campo: Contraseña (ej: "juangoogle123")
+├─ Indicador fuerza
+├─ Botón [Mostrar/Ocultar]
+└─ Botón [Guardar]
+  ↓
+Guardar encriptado en AsyncStorage
+  ↓
+Toast "Contraseña guardada"
+  ↓
+Volver a Vault (lista actualizada)
+
+
+FLUJO 5: COPIAR CONTRASEÑA
+──────────────────────────
+
+Botón [Copiar] en PasswordCard
+  ↓
+Desencripta contraseña en memoria
+  ↓
+Copia al clipboard
+  ↓
+Toast "Copiado ✓"
+  ↓
+Auto-limpia clipboard después 30 seg
+  ↓
+Elimina de memoria
+
+
+7. COMPONENTES DETALLADOS
+================================================================================
+
+SetupBoveda.tsx
+────────────────
+✓ Input para crear contraseña maestra
+✓ Input confirmación de contraseña
+✓ Indicador de fuerza (weak/medium/strong)
+✓ Botón [Crear Bóveda]
+✓ Mensajes de error si no coinciden
+
+
+LoginBoveda.tsx
+────────────────
+✓ Input para ingresar contraseña
+✓ Botón [Entrar]
+✓ Contador intentos fallidos (máx 3)
+✓ Mensaje de error si falla
+✓ Botón [Olvidé mi contraseña] (opcional)
+
+
+VaultScreen.tsx
+────────────────
+✓ FlatList de credenciales
+✓ Buscador (SearchBar)
+✓ Cada credencial en PasswordCard
+✓ Botón flotante [+] para agregar
+✓ Botón [Cerrar sesión] en header
+✓ Indicador de contraseñas guardadas
+
+
+PasswordCard.tsx
+────────────────
+✓ Muestra etiqueta
+✓ Botón [Copiar] → copia contraseña
+✓ Botón [Editar] → abre pantalla de edición
+✓ Botón [...] → menú eliminar
+✓ Icono visual (Google, Twitter, etc)
+✓ Swipe para eliminar (opcional)
+
+
+AddPasswordScreen.tsx
+──────────────────────
+✓ Input Etiqueta (texto guía)
+✓ Input Contraseña (oculta/visible)
+✓ Botón [Ojo] para toggle
+✓ Indicador fuerza en tiempo real
+✓ Botón [Generar contraseña aleatoria]
+✓ Botón [Guardar]
+✓ Validaciones antes guardar
+
+
+8. SERVICIOS CORE (LÓGICA)
+================================================================================
+
+cryptoService.ts
+────────────────
+
+export class CryptoService {
+  
+  // Derivar contraseña maestra
+  async derivarContrasenaMaestra(
+    contraseña: string,
+    salt?: string
+  ): Promise<{ hash: string; salt: string }> {
+    // Argon2id derivation
+  }
+
+  // Verificar contraseña maestra
+  async verificarContrasenaMaestra(
+    contraseña: string,
+    hashGuardado: string,
+    saltGuardado: string
+  ): Promise<boolean> {
+    // Comparar hashes
+  }
+
+  // Encriptar contraseña individual
+  async encriptarContrasena(
+    contraseña: string,
+    claveMaestra: string
+  ): Promise<string> {
+    // XChaCha20-Poly1305
+  }
+
+  // Desencriptar contraseña
+  async desencriptarContrasena(
+    contrasenasEncriptada: string,
+    claveMaestra: string
+  ): Promise<string> {
+    // Decryption
+  }
+
+  // Generar contraseña aleatoria
+  generarContrasenasAleatoria(longitud: number): string {
+    // Random 32 bytes
+  }
+}
+
+
+storageService.ts
+──────────────────
+
+export class StorageService {
+  
+  async guardarBoveda(datos: EstadoBoveda): Promise<void>
+  
+  async cargarBoveda(): Promise<EstadoBoveda | null>
+  
+  async guardarHash(hash: string, salt: string): Promise<void>
+  
+  async cargarHash(): Promise<{ hash: string; salt: string } | null>
+  
+  async limpiar(): Promise<void>
+}
+
+
+passwordService.ts
+────────────────────
+
+export class PasswordService {
+  
+  async agregarContrasena(
+    etiqueta: string,
+    contrasena: string,
+    claveMaestra: string
+  ): Promise<Credencial>
+
+  async obtenerContrasenasDesencriptadas(
+    claveMaestra: string
+  ): Promise<Credencial[]>
+
+  async eliminarContrasena(id: string): Promise<void>
+
+  async actualizarContrasena(
+    id: string,
+    nuevosDatos: Partial<Credencial>,
+    claveMaestra: string
+  ): Promise<void>
+}
+
+
+9. SEGURIDAD - CHECKLIST IMPLEMENTACIÓN
+================================================================================
+
+✅ CONTRASEÑA MAESTRA:
+  ☐ Derivada con Argon2id (no MD5/SHA1)
+  ☐ Salt aleatorio de 16 bytes
+  ☐ Stored hash + salt (no la contraseña)
+  ☐ Máximo 3 intentos fallidos
+
+
+✅ ALMACENAMIENTO:
+  ☐ AsyncStorage encriptado (Android: EncryptedSharedPreferences)
+  ☐ Cada contraseña encriptada individualmente
+  ☐ No guardar contraseña maestra en memoria permanente
+
+
+✅ MEMORIA:
+  ☐ Limpiar variables sensibles después de usar
+  ☐ Cerrar sesión si > 5 min inactividad
+  ☐ Eliminar clipboard después 30 seg
+
+
+✅ VALIDACIONES:
+  ☐ No permitir campos vacíos
+  ☐ Mínimo 8 caracteres en contraseña maestra
+  ☐ Validar formato antes encriptar
+  ☐ No guardar duplicados (mismo nombre)
+
+
+10. HITOS & MILESTONES
+================================================================================
+
+Semana 1 → ✅ Estructura base, navegación funcional
+Semana 2 → 🔐 Setup login con encriptación
+Semana 3 → 📝 CRUD contraseñas, listar y copiar
+Semana 4 → ➕ Agregar nuevas contraseñas
+Semana 5 → 🎨 Pulido, testing, deploy
+
+
+11. DEPENDENCIAS & INSTALACIÓN
+================================================================================
+
+# Crear proyecto
+npx create-expo-app boveda
+
+# Instalar dependencias críticas
+npm install react-native-sodium
+npm install @react-native-async-storage/async-storage
+npm install react-native-uuid
+npm install @react-navigation/native @react-navigation/stack
+npm install react-native-clipboard
+
+# Testing
+npm install --save-dev jest @types/jest
+
+
+12. COMANDOS DEL PROYECTO
+================================================================================
+
+# Desarrollo
+npm start                    # Inicia Expo
+npm run android             # Emulador Android
+npm run ios                 # Emulador iOS
+
+# Testing
+npm test                    # Ejecuta tests
+npm run lint                # Valida código
+
+# Build
+eas build                   # Compilar para producción
+
+
+13. PRÓXIMOS PASOS (DESPUÉS DEL MVP)
+================================================================================
+
+🚀 FASE 2 (Opcional):
+  • Biometría (Face ID / Fingerprint)
+  • Sincronizar en cloud (Firebase)
+  • Importar/exportar CSV
+  • Temas oscuro/claro
+  • Generador de contraseñas mejorado
+  • Auditoría de contraseñas débiles
+  • Notificaciones de cambios
+
+
+🔒 FASE 3 (Seguridad Avanzada):
+  • Auditoría de código por experto
+  • Penetration testing
+  • Certificar seguridad
+  • Publicar en App Store/Play Store
+
+
+14. RESUMEN EJECUTIVO
+================================================================================
+
+TIEMPO:                 4-5 semanas (1 dev)
+COMPLEJIDAD:            Media (criptografía + UI)
+TECH STACK:             React Native + Sodium + AsyncStorage
+LÍNEAS DE CÓDIGO:       ~3000-4000 LOC
+TESTS:                  Críticos para seguridad
+TOTAL HORAS ESTIMADAS:  87 horas
+
+
+15. MATRIZ DE PRIORIDADES
+================================================================================
+
+🔴 CRÍTICO (Must Have):
+  • Encriptación de contraseña maestra
+  • Setup inicial y login
+  • CRUD básico
+  • Limpiar memoria
+  • Encriptación individual de cada contraseña
+
+🟡 ALTA (Should Have):
+  • UI completa y funcional
+  • Copiar al clipboard
+  • Cerrar sesión
+  • Validaciones
+  • Testing
+
+🟢 BAJA (Nice to Have):
+  • Indicador de fuerza
+  • Buscar contraseñas
+  • Editar contraseñas
+  • Animaciones
+  • Tema oscuro
+
+
+16. RIESGOS Y MITIGACIÓN
+================================================================================
+
+RIESGO 1: Vulnerabilidad en criptografía
+────────────────────────────────────────
+Impacto: CRÍTICO
+Probabilidad: MEDIA
+Mitigación:
+  • Usar libsodium (auditoría probada)
+  • No reinventar la rueda
+  • Tests exhaustivos
+  • Revisar con experto
+
+RIESGO 2: Datos perdidos si no se guardan bien
+───────────────────────────────────────────────
+Impacto: ALTO
+Probabilidad: MEDIA
+Mitigación:
+  • Tests de persistencia
+  • Backups automáticos
+  • Validar escritura en storage
+
+RIESGO 3: Performance en lista muy grande
+──────────────────────────────────────────
+Impacto: MEDIO
+Probabilidad: BAJA
+Mitigación:
+  • FlatList con virtualization
+  • Optimizar renderizado
+  • Paginación si es necesario
+
+RIESGO 4: Memory leaks en desencriptación
+──────────────────────────────────────────
+Impacto: ALTO
+Probabilidad: MEDIA
+Mitigación:
+  • Limpiar variables después uso
+  • useEffect cleanup
+  • Profiling de memoria
+
+
+17. TESTING STRATEGY
+================================================================================
+
+UNITARIOS (cryptoService.ts):
+  ✓ Test derivación de contraseña
+  ✓ Test verificación de hash
+  ✓ Test encriptación/desencriptación
+  ✓ Test generación de random
+
+UNITARIOS (passwordService.ts):
+  ✓ Test add, get, delete, update
+  ✓ Test encriptación individual
+  ✓ Test duplicados
+
+INTEGRACIÓN:
+  ✓ Setup → Login → Vault → Add → Copiar
+  ✓ Logout limpia memoria
+  ✓ 5 min inactividad → logout automático
+
+SEGURIDAD:
+  ✓ No se puede copiar contraseña sin estar logged
+  ✓ Hash no se repite
+  ✓ Clipboard se limpia
+  ✓ Máx 3 intentos fallidos
+
+
+18. DOCUMENTACIÓN NECESARIA
+================================================================================
+
+README.md
+  • Cómo instalar
+  • Cómo usar
+  • Arquitectura general
+  • Seguridad
+
+CONTRIBUTING.md
+  • Guía de contribución
+  • Estándares de código
+
+ARCHITECTURE.md
+  • Diagramas de flujo
+  • Estructura de carpetas
+  • Patrones utilizados
+
+SECURITY.md
+  • Cómo guardamos datos
+  • Qué está encriptado
+  • Limitaciones conocidas
+
+
+19. CHECKLIST PRE-LANZAMIENTO
+================================================================================
+
+CODE QUALITY:
+  ☐ Código limpio (ESLint pass)
+  ☐ Tipos TypeScript correctos
+  ☐ Funciones documentadas
+  ☐ Sin console.logs sensibles
+
+FUNCIONALIDAD:
+  ☐ Todos los flujos probados
+  ☐ Manejo de errores completo
+  ☐ Edge cases cubiertos
+  ☐ Performance aceptable
+
+SEGURIDAD:
+  ☐ Sin hardcoded secrets
+  ☐ Criptografía auditada
+  ☐ Memory sanitization OK
+  ☐ Permisos mínimos necesarios
+
+COMPILACIÓN:
+  ☐ Builds sin warnings
+  ☐ APK/IPA generan correctamente
+  ☐ Tamaño de app aceptable
+  ☐ Funciona en dispositivos reales
+
+
+20. ESTRUCTURA DE COMMITS
+================================================================================
+
+feat: Implementar cryptoService con Argon2id
+fix: Limpiar memoria de contraseña después copiar
+refactor: Mejora estructura de passwordService
+test: Tests para verificación de hash
+docs: Actualizar documentación de seguridad
+style: Formatear código con Prettier
+ci: Agregar GitHub Actions para testing
+
+
+================================================================================
+                                 FIN DEL PLAN
+================================================================================
+
+Creado: 2026-09-30
+Versión: 1.0
+Duración Total Estimada: 87 horas (5 semanas)
+Complejidad General: MEDIA
+
+Para preguntas sobre implementación específica, consulta los Sprints detallados.
+Para preguntas de seguridad, revisa la Sección 9 (Checklist de Seguridad).

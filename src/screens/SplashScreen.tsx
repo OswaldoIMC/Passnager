@@ -1,0 +1,150 @@
+import React, { useEffect, useRef } from "react";
+import { View, Text, StyleSheet, Animated, Dimensions } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../types";
+import { COLORS } from "../constants/colors";
+
+// ----- Tipos -----
+type Props = StackScreenProps<RootStackParamList, "Splash">;
+
+const { width } = Dimensions.get("window");
+
+// Verificar si la bóveda ya está configurada en AsyncStorage
+async function bovedaEstaConfigurada(): Promise<boolean> {
+  // Por ahora siempre retorna false (primera vez)
+  return false;
+}
+
+// ----- Componente -----
+export default function SplashScreen({ navigation }: Props) {
+  // Animaciones
+  const logoOpacity = useRef(new Animated.Value(0)).current;
+  const logoScale = useRef(new Animated.Value(0.7)).current;
+  const textOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // 1. Animar logo de entrada
+    Animated.parallel([
+      Animated.timing(logoOpacity, {
+        toValue: 1,
+        duration: 700,
+        useNativeDriver: true,
+      }),
+      Animated.spring(logoScale, {
+        toValue: 1,
+        tension: 60,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // 2. Animar el texto un poco después
+    Animated.timing(textOpacity, {
+      toValue: 1,
+      duration: 600,
+      delay: 500,
+      useNativeDriver: true,
+    }).start();
+
+    // 3. Después de 2.5 seg decidir a qué pantalla navegar
+    const timer = setTimeout(async () => {
+      const configurada = await bovedaEstaConfigurada();
+      navigation.replace(configurada ? "LoginBoveda" : "SetupBoveda");
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      {/* Fondo con círculo decorativo */}
+      <View style={styles.circle} />
+
+      {/* Ícono / logo */}
+      <Animated.View
+        style={[
+          styles.logoContainer,
+          { opacity: logoOpacity, transform: [{ scale: logoScale }] },
+        ]}
+      >
+        {/* Sustituye este emoji por tu ícono real (Image component) */}
+        <Text style={styles.logoEmoji}>Aqui va logo</Text>
+      </Animated.View>
+
+      {/* Nombre de la app */}
+      <Animated.View style={{ opacity: textOpacity }}>
+        <Text style={styles.appName}>Passnager</Text>
+        <Text style={styles.tagline}>Tu gestor de contraseñas seguro</Text>
+      </Animated.View>
+
+      {/* Versión en la parte inferior */}
+      <Text style={styles.version}>v1.0.0</Text>
+    </View>
+  );
+}
+
+// ----- Estilos -----
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  // Círculo decorativo de fondo
+  circle: {
+    position: "absolute",
+    width: width * 1.2,
+    height: width * 1.2,
+    borderRadius: width * 0.6,
+    backgroundColor: COLORS.primary,
+    opacity: 0.08,
+    top: -width * 0.3,
+  },
+
+  // Contenedor del ícono con efecto de "tarjeta"
+  logoContainer: {
+    width: 110,
+    height: 110,
+    borderRadius: 28,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 28,
+    // Sombra (iOS)
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.45,
+    shadowRadius: 16,
+    // Sombra (Android)
+    elevation: 12,
+  },
+
+  logoEmoji: {
+    fontSize: 52,
+  },
+
+  appName: {
+    fontSize: 36,
+    fontWeight: "700",
+    color: COLORS.white,
+    textAlign: "center",
+    letterSpacing: 1,
+  },
+
+  tagline: {
+    fontSize: 14,
+    color: COLORS.textMuted,
+    textAlign: "center",
+    marginTop: 6,
+    letterSpacing: 0.4,
+  },
+
+  version: {
+    position: "absolute",
+    bottom: 36,
+    fontSize: 12,
+    color: COLORS.textMuted,
+  },
+});
