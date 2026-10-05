@@ -6,7 +6,7 @@
 ================================================================================
 
 Nombre: Bóveda (Password Manager)
-Plataforma: Mobile (iOS + Android)
+Plataforma: Mobile (iOS + Android) - Por ahora solo en android
 Stack Recomendado: React Native + TypeScript
 Duración estimada: 4-5 semanas
 Equipo: 1 Dev (tú)
@@ -89,7 +89,7 @@ interface EstadoBoveda {
 5. PLAN POR SPRINTS
 ================================================================================
 
-SPRINT 1: SETUP & NAVEGACIÓN (Semana 1)
+SPRINT 1: SETUP & NAVEGACIÓN (Semana 1)                               COMPLETADO
 ================================================================================
 
 Objetivo: Estructura base funcional sin seguridad
@@ -130,7 +130,7 @@ ENTREGABLE: App navega entre pantallas, UI básica funcional
 TOTAL HORAS: 16h
 
 
-SPRINT 2: ALMACENAMIENTO & SEGURIDAD (Semana 2)
+SPRINT 2: ALMACENAMIENTO & SEGURIDAD (Semana 2)                       COMPLETADO
 ================================================================================
 
 Objetivo: Guardar y validar contraseña maestra
@@ -439,7 +439,7 @@ LoginBoveda.tsx
 ────────────────
 ✓ Input para ingresar contraseña
 ✓ Botón [Entrar]
-✓ Contador intentos fallidos (máx 3)
+✓ Contador intentos fallidos (máx 5)
 ✓ Mensaje de error si falla
 ✓ Botón [Olvidé mi contraseña] (opcional)
 
@@ -572,7 +572,7 @@ export class PasswordService {
   ☐ Derivada con Argon2id (no MD5/SHA1)
   ☐ Salt aleatorio de 16 bytes
   ☐ Stored hash + salt (no la contraseña)
-  ☐ Máximo 3 intentos fallidos
+  ☐ Máximo 5 intentos fallidos
 
 
 ✅ ALMACENAMIENTO:

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Animated, Dimensions } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
 import { COLORS } from "../constants/colors";
+import { storageService } from "../services/storageService";
 
 // ----- Tipos -----
 type Props = StackScreenProps<RootStackParamList, "Splash">;
@@ -11,8 +12,7 @@ const { width } = Dimensions.get("window");
 
 // Verificar si la bóveda ya está configurada en AsyncStorage
 async function bovedaEstaConfigurada(): Promise<boolean> {
-  // Por ahora siempre retorna false (primera vez)
-  return false;
+  return storageService.bovedaEstaConfigurada();
 }
 
 // ----- Componente -----
@@ -57,17 +57,17 @@ export default function SplashScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      {/* Fondo con círculo decorativo */}
+      {/* Fondo con circulo decorativo */}
       <View style={styles.circle} />
 
-      {/* Ícono / logo */}
+      {/* Icono / logo */}
       <Animated.View
         style={[
           styles.logoContainer,
           { opacity: logoOpacity, transform: [{ scale: logoScale }] },
         ]}
       >
-        {/* Sustituye este emoji por tu ícono real (Image component) */}
+        {/* Sustituye este emoji por tu icono real (Image component) */}
         <Text style={styles.logoEmoji}>Aqui va logo</Text>
       </Animated.View>
 
@@ -77,7 +77,7 @@ export default function SplashScreen({ navigation }: Props) {
         <Text style={styles.tagline}>Tu gestor de contraseñas seguro</Text>
       </Animated.View>
 
-      {/* Versión en la parte inferior */}
+      {/* Version en la parte inferior */}
       <Text style={styles.version}>v1.0.0</Text>
     </View>
   );
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     top: -width * 0.3,
   },
 
-  // Contenedor del ícono con efecto de "tarjeta"
+  // Contenedor del icono con efecto de tarjeta
   logoContainer: {
     width: 110,
     height: 110,

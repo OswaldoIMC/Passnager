@@ -8,8 +8,7 @@ import { RootStackParamList } from "./types";
 import SplashScreen from "./screens/SplashScreen";
 import SetupBoveda from "./screens/SetupBoveda";
 import LoginBoveda from "./screens/LoginBoveda";
-
-// import VaultScreen from './screens/VaultScreen';
+import VaultScreen from "./screens/VaultScreen";
 // import AddPasswordScreen from './screens/AddPasswordScreen';
 
 // ----- Navegacion -----
@@ -51,8 +50,7 @@ export default function App() {
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="SetupBoveda" component={SetupBoveda} />
         <Stack.Screen name="LoginBoveda" component={LoginBoveda} />
-
-        {/* <Stack.Screen name="Vault" component={VaultScreen}/> */}
+        <Stack.Screen name="Vault" component={VaultScreen} />
         {/* <Stack.Screen name="AddPassword" component={AddPasswordScreen}/> */}
       </Stack.Navigator>
     </NavigationContainer>

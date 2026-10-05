@@ -15,11 +15,12 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
+import { useBoveda } from "../hooks/useBoveda";
 
 // ----- Tipos -----
 type Props = StackScreenProps<RootStackParamList, "SetupBoveda">;
 
-// ----- Lógica de fuerza de contraseña -----
+// ----- Logica de fuerza de contraseña -----
 type FuerzaNivel = "vacia" | "debil" | "media" | "fuerte";
 
 function calcularFuerza(password: string): FuerzaNivel {
@@ -27,9 +28,9 @@ function calcularFuerza(password: string): FuerzaNivel {
   if (password.length < 8) return "debil";
 
   let puntos = 0;
-  if (/[a-z]/.test(password)) puntos++; // minúsculas
-  if (/[A-Z]/.test(password)) puntos++; // mayúsculas
-  if (/[0-9]/.test(password)) puntos++; // números
+  if (/[a-z]/.test(password)) puntos++; // minusculas
+  if (/[A-Z]/.test(password)) puntos++; // mayusculas
+  if (/[0-9]/.test(password)) puntos++; // numeros
   if (/[^a-zA-Z0-9]/.test(password)) puntos++; // especiales
 
   if (puntos <= 1) return "debil";
@@ -81,8 +82,10 @@ export default function SetupBoveda({ navigation }: Props) {
   const [confirmacion, setConfirmacion] = useState("");
   const [mostrarPass, setMostrarPass] = useState(false);
   const [mostrarConf, setMostrarConf] = useState(false);
-  const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Hook que maneja la criptografia y el storage
+  const { configurarBoveda, cargando } = useBoveda();
 
   const fuerza = calcularFuerza(contrasena);
 
@@ -106,21 +109,18 @@ export default function SetupBoveda({ navigation }: Props) {
     return true;
   }
 
-  // ----- Crear bóveda -----
+  // ----- Crear boveda -----
   async function handleCrearBoveda() {
     if (!validar()) return;
 
-    setCargando(true);
-    try {
-      // Simulación temporal (quitar el await/setTimeout cuando haya servicios):
-      await new Promise<void>((resolve) => setTimeout(resolve, 800));
+    // configurarBoveda: deriva la clave con Argon2id y guarda el hash en storage
+    const ok = await configurarBoveda(contrasena);
 
-      // Navegar a Login después del setup
+    if (ok) {
+      // replace() para que el usuario no pueda volver con el regresar
       navigation.replace("LoginBoveda");
-    } catch (e) {
+    } else {
       Alert.alert("Error", "No se pudo crear la bóveda. Inténtalo de nuevo.");
-    } finally {
-      setCargando(false);
     }
   }
 
@@ -182,7 +182,7 @@ export default function SetupBoveda({ navigation }: Props) {
           {/* Indicador de fuerza */}
           <IndicadorFuerza nivel={fuerza} />
 
-          {/* Campo: Confirmación */}
+          {/* Campo: Confirmacion */}
           <Text style={[styles.label, { marginTop: 20 }]}>
             Confirmar contraseña
           </Text>
@@ -226,7 +226,7 @@ export default function SetupBoveda({ navigation }: Props) {
             </View>
           ) : null}
 
-          {/* Botón principal */}
+          {/* Boton principal */}
           <TouchableOpacity
             style={[styles.boton, cargando && styles.botonDisabled]}
             onPress={handleCrearBoveda}
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 
-  // Botón
+  // Boton
   boton: {
     backgroundColor: COLORS.primary,
     borderRadius: 14,
