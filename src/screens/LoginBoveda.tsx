@@ -14,7 +14,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "../types";
 import { COLORS } from "../constants/colors";
-import { useBoveda } from "../hooks/useBoveda";
+import { useBoveda } from "../context/BovedaContext";
 
 // ----- Tipos -----
 type Props = StackScreenProps<RootStackParamList, "LoginBoveda">;

@@ -10,14 +10,16 @@ import SetupBoveda from "./screens/SetupBoveda";
 import LoginBoveda from "./screens/LoginBoveda";
 import VaultScreen from "./screens/VaultScreen";
 // import AddPasswordScreen from './screens/AddPasswordScreen';
+import { BovedaProvider } from "./context/BovedaContext";
 
 // ----- Navegacion -----
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar style="light" />
+    <BovedaProvider>
+      <NavigationContainer>
+        <StatusBar style="light" />
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{
@@ -54,5 +56,6 @@ export default function App() {
         {/* <Stack.Screen name="AddPassword" component={AddPasswordScreen}/> */}
       </Stack.Navigator>
     </NavigationContainer>
+  </BovedaProvider>
   );
 }

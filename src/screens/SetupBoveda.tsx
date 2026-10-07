@@ -15,38 +15,11 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
-import { useBoveda } from "../hooks/useBoveda";
+import { useBoveda } from "../context/BovedaContext";
+import { calcularFuerza, FUERZA_CONFIG, FuerzaNivel } from "../utils/validation";
 
 // ----- Tipos -----
 type Props = StackScreenProps<RootStackParamList, "SetupBoveda">;
-
-// ----- Logica de fuerza de contraseña -----
-type FuerzaNivel = "vacia" | "debil" | "media" | "fuerte";
-
-function calcularFuerza(password: string): FuerzaNivel {
-  if (password.length === 0) return "vacia";
-  if (password.length < 8) return "debil";
-
-  let puntos = 0;
-  if (/[a-z]/.test(password)) puntos++; // minusculas
-  if (/[A-Z]/.test(password)) puntos++; // mayusculas
-  if (/[0-9]/.test(password)) puntos++; // numeros
-  if (/[^a-zA-Z0-9]/.test(password)) puntos++; // especiales
-
-  if (puntos <= 1) return "debil";
-  if (puntos === 2 || puntos === 3) return "media";
-  return "fuerte";
-}
-
-const FUERZA_CONFIG: Record<
-  FuerzaNivel,
-  { label: string; color: string; barras: number }
-> = {
-  vacia: { label: "", color: COLORS.border, barras: 0 },
-  debil: { label: "Débil", color: COLORS.danger, barras: 1 },
-  media: { label: "Media", color: COLORS.warning, barras: 2 },
-  fuerte: { label: "Fuerte", color: COLORS.success, barras: 3 },
-};
 
 // ----- Sub-componente: Indicador de fuerza -----
 function IndicadorFuerza({ nivel }: { nivel: FuerzaNivel }) {

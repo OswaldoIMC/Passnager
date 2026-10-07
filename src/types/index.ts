@@ -17,9 +17,9 @@ export interface EstadoBoveda {
   intentosFallidos: number;
 }
 
-// ----- TIPOS DE NAVEGACIÓN -----
+// ----- TIPOS DE NAVEGACION -----
 
-// Parámetros de cada ruta del Stack Navigator
+// Parametros de cada ruta del Stack Navigator
 export type RootStackParamList = {
   Splash: undefined;
   SetupBoveda: undefined;

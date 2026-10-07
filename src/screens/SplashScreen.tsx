@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Animated, Dimensions } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Animated, Dimensions, Image } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
 import { COLORS } from "../constants/colors";
@@ -18,9 +18,9 @@ async function bovedaEstaConfigurada(): Promise<boolean> {
 // ----- Componente -----
 export default function SplashScreen({ navigation }: Props) {
   // Animaciones
-  const logoOpacity = useRef(new Animated.Value(0)).current;
-  const logoScale = useRef(new Animated.Value(0.7)).current;
-  const textOpacity = useRef(new Animated.Value(0)).current;
+  const [logoOpacity] = React.useState(() => new Animated.Value(0));
+  const [logoScale] = React.useState(() => new Animated.Value(0.7));
+  const [textOpacity] = React.useState(() => new Animated.Value(0));
 
   useEffect(() => {
     // 1. Animar logo de entrada
@@ -67,8 +67,11 @@ export default function SplashScreen({ navigation }: Props) {
           { opacity: logoOpacity, transform: [{ scale: logoScale }] },
         ]}
       >
-        {/* Sustituye este emoji por tu icono real (Image component) */}
-        <Text style={styles.logoEmoji}>Aqui va logo</Text>
+        <Image
+          source={require("../../assets/passnager_logo_1024.png")}
+          style={styles.logoImage}
+          resizeMode="cover"
+        />
       </Animated.View>
 
       {/* Nombre de la app */}
@@ -78,7 +81,7 @@ export default function SplashScreen({ navigation }: Props) {
       </Animated.View>
 
       {/* Version en la parte inferior */}
-      <Text style={styles.version}>v1.0.0</Text>
+      <Text style={styles.version}>v0.1.0</Text>
     </View>
   );
 }
@@ -105,8 +108,8 @@ const styles = StyleSheet.create({
 
   // Contenedor del icono con efecto de tarjeta
   logoContainer: {
-    width: 110,
-    height: 110,
+    width: 120,
+    height: 120,
     borderRadius: 28,
     backgroundColor: COLORS.primary,
     alignItems: "center",
@@ -121,8 +124,10 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
 
-  logoEmoji: {
-    fontSize: 52,
+  logoImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 28,
   },
 
   appName: {

@@ -8,6 +8,8 @@
     "@react-navigation/native": "^7.5.0",
     "@react-navigation/stack": "^7.12.0",
     "expo": "~57.0.26",
+    "expo-clipboard": "~57.0.2",
+    "expo-font": "~57.0.4",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
     "react-native": "0.86.3",
@@ -23,10 +25,13 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "lint": "expo lint"
   },
   "private": true,
   "devDependencies": {
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~57.0.2",
     "patch-package": "^8.0.1",
     "typescript": "~6.0.3"
   }
