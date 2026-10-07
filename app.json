@@ -2,9 +2,9 @@
   "expo": {
     "name": "Passnager",
     "slug": "Passnager",
-    "version": "1.0.0",
+    "version": "0.1.2",
     "orientation": "portrait",
-    "icon": "./assets/passnager_logo_1024.png",
+    "icon": "./assets/adaptive-icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true
@@ -13,15 +13,13 @@
       "package": "com.oswaldoimc.Passnager",
       "adaptiveIcon": {
         "backgroundColor": "#0D1117",
-        "foregroundImage": "./assets/passnager_logo_1024.png"
+        "foregroundImage": "./assets/adaptive-icon.png"
       }
     },
     "web": {
-      "favicon": "./assets/passnager_logo_1024.png"
+      "favicon": "./assets/adaptive-icon.png"
     },
-    "plugins": [
-      "expo-font"
-    ],
+    "plugins": ["expo-font"],
     "extra": {
       "eas": {
         "projectId": "9b4c79b5-3d96-4ff7-afe5-8a5416b8d508"

@@ -13,19 +13,21 @@ import {
   RefreshControl,
   Animated,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList, Credencial } from "../types";
 import { COLORS } from "../constants/colors";
 import { useBoveda } from "../context/BovedaContext";
 import { passwordService } from "../services/passwordService";
+import { clipboardService } from "../services/clipboardService";
 import PasswordCard from "../components/PasswordCard";
 import ModalCredencial from "../components/ModalCredencial";
 
 type Props = StackScreenProps<RootStackParamList, "Vault">;
 
 export default function VaultScreen({ navigation }: Props) {
+  const insets = useSafeAreaInsets();
   const { claveMaestra, estaDesbloqueada, cerrarSesion } = useBoveda();
 
   // Estados principales
@@ -132,6 +134,7 @@ export default function VaultScreen({ navigation }: Props) {
           text: "Bloquear Bóveda",
           style: "destructive",
           onPress: () => {
+            clipboardService.limpiarPortapapeles();
             cerrarSesion();
             navigation.replace("LoginBoveda");
           },
@@ -239,7 +242,10 @@ export default function VaultScreen({ navigation }: Props) {
               onCopiedFeedback={mostrarToast}
             />
           )}
-          contentContainerStyle={styles.listContainer}
+          contentContainerStyle={[
+            styles.listContainer,
+            { paddingBottom: Math.max(insets.bottom + 90, 90) },
+          ]}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
@@ -273,7 +279,7 @@ export default function VaultScreen({ navigation }: Props) {
 
       {/* Boton flotante para agregar contraseña */}
       <TouchableOpacity
-        style={styles.fab}
+        style={[styles.fab, { bottom: Math.max(insets.bottom + 20, 26) }]}
         onPress={() => {
           setCredencialEditando(null);
           setModalVisible(true);
@@ -290,6 +296,7 @@ export default function VaultScreen({ navigation }: Props) {
           style={[
             styles.toast,
             {
+              bottom: Math.max(insets.bottom + 90, 96),
               opacity: toastAnim,
               transform: [
                 {

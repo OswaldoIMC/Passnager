@@ -10,12 +10,12 @@ import {
   Animated,
   Platform,
 } from "react-native";
-import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons";
 import type { Credencial } from "../types";
 import { COLORS } from "../constants/colors";
 import { useBoveda } from "../context/BovedaContext";
 import { passwordService } from "../services/passwordService";
+import { clipboardService } from "../services/clipboardService";
 
 interface Props {
   credencial: Credencial;
@@ -39,17 +39,12 @@ export default function PasswordCard({
   const [cargando, setCargando] = useState(false);
 
   // Animaciones para feedback de copiado
-  const escalaAnim = useRef(new Animated.Value(1)).current;
+  const [escalaAnim] = useState(() => new Animated.Value(1));
   const timeoutOcultarRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const timeoutLimpiarClipboardRef = useRef<ReturnType<
-    typeof setTimeout
-  > | null>(null);
 
   useEffect(() => {
     return () => {
       if (timeoutOcultarRef.current) clearTimeout(timeoutOcultarRef.current);
-      if (timeoutLimpiarClipboardRef.current)
-        clearTimeout(timeoutLimpiarClipboardRef.current);
     };
   }, []);
 
@@ -75,8 +70,8 @@ export default function PasswordCard({
         claveMaestra,
       );
 
-      // Copiar al clipboard con expo-clipboard
-      await Clipboard.setStringAsync(contrasenaPlana);
+      // Copiar con el servicio seguro (con timer y soporte de AppState en segundo plano)
+      await clipboardService.copiarContrasena(contrasenaPlana, 30);
 
       // Feedback visual y animacion
       setCopiado(true);
@@ -101,14 +96,6 @@ export default function PasswordCard({
       setTimeout(() => {
         setCopiado(false);
       }, 2200);
-
-      // Medida de seguridad: limpiar el portapapeles automaticamente tras 30 segundos
-      if (timeoutLimpiarClipboardRef.current) {
-        clearTimeout(timeoutLimpiarClipboardRef.current);
-      }
-      timeoutLimpiarClipboardRef.current = setTimeout(async () => {
-        await Clipboard.setStringAsync("");
-      }, 30000);
     } catch (e) {
       console.error("[PasswordCard] Error al copiar:", e);
     } finally {

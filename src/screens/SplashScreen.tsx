@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Animated, Dimensions, Image } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RootStackParamList } from "../types";
 import { COLORS } from "../constants/colors";
 import { storageService } from "../services/storageService";
@@ -17,6 +18,7 @@ async function bovedaEstaConfigurada(): Promise<boolean> {
 
 // ----- Componente -----
 export default function SplashScreen({ navigation }: Props) {
+  const insets = useSafeAreaInsets();
   // Animaciones
   const [logoOpacity] = React.useState(() => new Animated.Value(0));
   const [logoScale] = React.useState(() => new Animated.Value(0.7));
@@ -81,7 +83,9 @@ export default function SplashScreen({ navigation }: Props) {
       </Animated.View>
 
       {/* Version en la parte inferior */}
-      <Text style={styles.version}>v0.1.0</Text>
+      <Text style={[styles.version, { bottom: Math.max(insets.bottom + 16, 28) }]}>
+        v0.1.2
+      </Text>
     </View>
   );
 }

@@ -19,6 +19,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import { useBoveda } from "../context/BovedaContext";
@@ -41,6 +42,7 @@ export default function ModalCredencial({
   onSaved,
   credencialEditar,
 }: Props) {
+  const insets = useSafeAreaInsets();
   const { claveMaestra } = useBoveda();
 
   const esEdicion = !!credencialEditar;
@@ -134,7 +136,17 @@ export default function ModalCredencial({
         style={styles.modalOverlay}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <View style={styles.modalContent}>
+        <View
+          style={[
+            styles.modalContent,
+            {
+              paddingBottom: Math.max(
+                insets.bottom + 16,
+                Platform.OS === "ios" ? 40 : 26,
+              ),
+            },
+          ]}
+        >
           {/* Header */}
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>

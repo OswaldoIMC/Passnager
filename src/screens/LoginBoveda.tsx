@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,9 @@ import {
   Platform,
   ActivityIndicator,
   Dimensions,
+  Keyboard,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "../types";
@@ -23,9 +25,28 @@ const MAX_INTENTOS = 5;
 const { width } = Dimensions.get("window");
 
 export default function LoginBoveda({ navigation }: Props) {
+  const insets = useSafeAreaInsets();
   const [contrasena, setContrasena] = useState("");
   const [mostrarPass, setMostrarPass] = useState(false);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
+  const [tecladoVisible, setTecladoVisible] = useState(false);
+
+  useEffect(() => {
+    const showEvent =
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+    const showSub = Keyboard.addListener(showEvent, () =>
+      setTecladoVisible(true),
+    );
+    const hideSub = Keyboard.addListener(hideEvent, () =>
+      setTecladoVisible(false),
+    );
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   // useBoveda da la logica de verificacion y el estado de sesion
   const { intentarLogin, intentosFallidos, estaBloqueada, cargando } =
@@ -65,7 +86,7 @@ export default function LoginBoveda({ navigation }: Props) {
   return (
     <KeyboardAvoidingView
       style={styles.flex}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.container}>
         {/* Fondo decorativo */}
@@ -195,17 +216,24 @@ export default function LoginBoveda({ navigation }: Props) {
         </View>
 
         {/* Aviso de seguridad */}
-        <View style={styles.aviso}>
-          <Ionicons
-            name="information-circle-outline"
-            size={14}
-            color={COLORS.textMuted}
-            style={{ marginRight: 6 }}
-          />
-          <Text style={styles.avisoTexto}>
-            Si olvidaste tu contraseña, no hay forma de recuperarla.
-          </Text>
-        </View>
+        {!tecladoVisible && (
+          <View
+            style={[
+              styles.aviso,
+              { bottom: Math.max(insets.bottom + 16, 24) },
+            ]}
+          >
+            <Ionicons
+              name="information-circle-outline"
+              size={14}
+              color={COLORS.textMuted}
+              style={{ marginRight: 6 }}
+            />
+            <Text style={styles.avisoTexto}>
+              Si olvidaste tu contraseña, no hay forma de recuperarla.
+            </Text>
+          </View>
+        )}
       </View>
     </KeyboardAvoidingView>
   );
