@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Animated, Dimensions, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  Dimensions,
+  Image,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RootStackParamList } from "../types";
@@ -83,8 +90,10 @@ export default function SplashScreen({ navigation }: Props) {
       </Animated.View>
 
       {/* Version en la parte inferior */}
-      <Text style={[styles.version, { bottom: Math.max(insets.bottom + 16, 28) }]}>
-        v0.1.2
+      <Text
+        style={[styles.version, { bottom: Math.max(insets.bottom + 16, 28) }]}
+      >
+        v0.1.3
       </Text>
     </View>
   );

@@ -218,10 +218,7 @@ export default function LoginBoveda({ navigation }: Props) {
         {/* Aviso de seguridad */}
         {!tecladoVisible && (
           <View
-            style={[
-              styles.aviso,
-              { bottom: Math.max(insets.bottom + 16, 24) },
-            ]}
+            style={[styles.aviso, { bottom: Math.max(insets.bottom + 16, 24) }]}
           >
             <Ionicons
               name="information-circle-outline"

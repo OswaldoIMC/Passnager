@@ -96,7 +96,11 @@ class ClipboardService {
     this.ultimaCopia = null;
 
     try {
-      await Clipboard.setStringAsync("");
+      if (typeof (Clipboard as any).clearAsync === "function") {
+        await (Clipboard as any).clearAsync();
+      } else {
+        await Clipboard.setStringAsync("");
+      }
     } catch (e) {
       console.warn("[ClipboardService] No se pudo limpiar el portapapeles:", e);
     }

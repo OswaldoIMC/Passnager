@@ -16,7 +16,11 @@ import { RootStackParamList } from "../types";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import { useBoveda } from "../context/BovedaContext";
-import { calcularFuerza, FUERZA_CONFIG, FuerzaNivel } from "../utils/validation";
+import {
+  calcularFuerza,
+  FUERZA_CONFIG,
+  FuerzaNivel,
+} from "../utils/validation";
 
 // ----- Tipos -----
 type Props = StackScreenProps<RootStackParamList, "SetupBoveda">;

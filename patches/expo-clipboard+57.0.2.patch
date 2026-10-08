@@ -1,8 +1,8 @@
 diff --git a/node_modules/expo-clipboard/android/src/main/java/expo/modules/clipboard/ClipboardModule.kt b/node_modules/expo-clipboard/android/src/main/java/expo/modules/clipboard/ClipboardModule.kt
-index aad412e..e7836df 100644
+index aad412e..fb151db 100644
 --- a/node_modules/expo-clipboard/android/src/main/java/expo/modules/clipboard/ClipboardModule.kt
 +++ b/node_modules/expo-clipboard/android/src/main/java/expo/modules/clipboard/ClipboardModule.kt
-@@ -54,6 +54,11 @@ class ClipboardModule : Module() {
+@@ -54,10 +54,24 @@ class ClipboardModule : Module() {
            ClipData.newHtmlText(null, plainText, content)
          }
        }
@@ -14,3 +14,16 @@ index aad412e..e7836df 100644
        clipboardManager.setPrimaryClip(clip)
        return@AsyncFunction true
      }
+ 
++    AsyncFunction("clearAsync") {
++      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
++        clipboardManager.clearPrimaryClip()
++      } else {
++        clipboardManager.setPrimaryClip(ClipData.newPlainText(null, ""))
++      }
++      return@AsyncFunction true
++    }
++
+     AsyncFunction<Boolean>("hasStringAsync") {
+       clipboardManager
+         .primaryClipDescription

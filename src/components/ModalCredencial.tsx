@@ -14,10 +14,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Modal,
-  KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
   Alert,
+  Keyboard,
+  ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -52,6 +54,26 @@ export default function ModalCredencial({
   const [contrasena, setContrasena] = useState("");
   const [mostrarPass, setMostrarPass] = useState(false);
   const [guardando, setGuardando] = useState(false);
+  const [tecladoHeight, setTecladoHeight] = useState(0);
+
+  useEffect(() => {
+    const showEvent =
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const showSub = Keyboard.addListener(showEvent, (e) => {
+      setTecladoHeight(e.endCoordinates.height);
+    });
+    const hideSub = Keyboard.addListener(hideEvent, () => {
+      setTecladoHeight(0);
+    });
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   // Reiniciar formulario cuando el modal se abre o cambia de modo
   useEffect(() => {
@@ -130,156 +152,176 @@ export default function ModalCredencial({
       visible={visible}
       animationType="slide"
       transparent={true}
+      statusBarTranslucent={true}
       onRequestClose={handleCerrar}
     >
-      <KeyboardAvoidingView
-        style={styles.modalOverlay}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      <View
+        style={[
+          styles.modalOverlay,
+          {
+            paddingBottom: tecladoHeight > 0 ? tecladoHeight : 0,
+          },
+        ]}
       >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.backdropTouchArea} />
+        </TouchableWithoutFeedback>
+
         <View
           style={[
             styles.modalContent,
             {
-              paddingBottom: Math.max(
-                insets.bottom + 16,
-                Platform.OS === "ios" ? 40 : 26,
-              ),
+              paddingBottom:
+                tecladoHeight > 0
+                  ? 16
+                  : Math.max(
+                      insets.bottom + 16,
+                      Platform.OS === "ios" ? 40 : 26,
+                    ),
             },
           ]}
         >
-          {/* Header */}
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>
-              {esEdicion ? "Editar Contraseña" : "Nueva Contraseña"}
-            </Text>
-            <TouchableOpacity
-              onPress={handleCerrar}
-              style={styles.modalCloseBtn}
-            >
-              <Ionicons name="close" size={22} color={COLORS.textMuted} />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.modalSub}>
-            {esEdicion
-              ? "Modifica la etiqueta o la contraseña de esta credencial."
-              : "Se guardará cifrada con tu clave maestra en el almacenamiento seguro."}
-          </Text>
-
-          {/* Input Etiqueta */}
-          <Text style={styles.modalLabel}>Servicio o Etiqueta</Text>
-          <View style={styles.modalInputWrapper}>
-            <Ionicons
-              name="globe-outline"
-              size={18}
-              color={COLORS.textMuted}
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              style={styles.modalInput}
-              value={etiqueta}
-              onChangeText={setEtiqueta}
-              placeholder="Ej: Google, Netflix, GitHub"
-              placeholderTextColor={COLORS.textMuted}
-              autoCapitalize="sentences"
-              autoCorrect={false}
-            />
-          </View>
-
-          {/* Input Contraseña */}
-          <Text style={[styles.modalLabel, { marginTop: 16 }]}>Contraseña</Text>
-          <View style={styles.modalInputWrapper}>
-            <Ionicons
-              name="lock-closed-outline"
-              size={18}
-              color={COLORS.textMuted}
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              style={styles.modalInput}
-              value={contrasena}
-              onChangeText={setContrasena}
-              placeholder={
-                esEdicion
-                  ? "Dejar vacío para mantener la actual"
-                  : "Contraseña a proteger"
-              }
-              placeholderTextColor={COLORS.textMuted}
-              secureTextEntry={!mostrarPass}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            <TouchableOpacity
-              onPress={() => setMostrarPass((v) => !v)}
-              style={{ padding: 4 }}
-            >
-              <Ionicons
-                name={mostrarPass ? "eye-off-outline" : "eye-outline"}
-                size={20}
-                color={COLORS.textMuted}
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Indicador de fuerza (solo si se esta escribiendo contraseña) */}
-          {contrasena.length > 0 && fuerza !== "vacia" && (
-            <View style={styles.fuerzaContainer}>
-              <View style={styles.fuerzaBarras}>
-                {[1, 2, 3].map((i) => (
-                  <View
-                    key={i}
-                    style={[
-                      styles.fuerzaBarra,
-                      {
-                        backgroundColor:
-                          i <= FUERZA_CONFIG[fuerza].barras
-                            ? FUERZA_CONFIG[fuerza].color
-                            : COLORS.border,
-                      },
-                    ]}
-                  />
-                ))}
-              </View>
-              <Text
-                style={[
-                  styles.fuerzaLabel,
-                  { color: FUERZA_CONFIG[fuerza].color },
-                ]}
-              >
-                {FUERZA_CONFIG[fuerza].label}
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+          >
+            {/* Header */}
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>
+                {esEdicion ? "Editar Contraseña" : "Nueva Contraseña"}
               </Text>
+              <TouchableOpacity
+                onPress={handleCerrar}
+                style={styles.modalCloseBtn}
+              >
+                <Ionicons name="close" size={22} color={COLORS.textMuted} />
+              </TouchableOpacity>
             </View>
-          )}
 
-          {/* Botones de accion */}
-          <View style={styles.modalActions}>
-            <TouchableOpacity
-              style={styles.modalCancelBtn}
-              onPress={handleCerrar}
-              disabled={guardando}
-            >
-              <Text style={styles.modalCancelText}>Cancelar</Text>
-            </TouchableOpacity>
+            <Text style={styles.modalSub}>
+              {esEdicion
+                ? "Modifica la etiqueta o la contraseña de esta credencial."
+                : "Se guardará cifrada con tu clave maestra en el almacenamiento seguro."}
+            </Text>
 
-            <TouchableOpacity
-              style={[
-                styles.modalGuardarBtn,
-                guardando && styles.modalBtnDisabled,
-              ]}
-              onPress={handleGuardar}
-              disabled={guardando}
-            >
-              {guardando ? (
-                <ActivityIndicator color={COLORS.white} size="small" />
-              ) : (
-                <Text style={styles.modalGuardarText}>
-                  {esEdicion ? "Actualizar" : "Guardar"}
+            {/* Input Etiqueta */}
+            <Text style={styles.modalLabel}>Servicio o Etiqueta</Text>
+            <View style={styles.modalInputWrapper}>
+              <Ionicons
+                name="globe-outline"
+                size={18}
+                color={COLORS.textMuted}
+                style={{ marginRight: 10 }}
+              />
+              <TextInput
+                style={styles.modalInput}
+                value={etiqueta}
+                onChangeText={setEtiqueta}
+                placeholder="Ej: Google, Netflix, GitHub"
+                placeholderTextColor={COLORS.textMuted}
+                autoCapitalize="sentences"
+                autoCorrect={false}
+              />
+            </View>
+
+            {/* Input Contraseña */}
+            <Text style={[styles.modalLabel, { marginTop: 16 }]}>
+              Contraseña
+            </Text>
+            <View style={styles.modalInputWrapper}>
+              <Ionicons
+                name="lock-closed-outline"
+                size={18}
+                color={COLORS.textMuted}
+                style={{ marginRight: 10 }}
+              />
+              <TextInput
+                style={styles.modalInput}
+                value={contrasena}
+                onChangeText={setContrasena}
+                placeholder={
+                  esEdicion
+                    ? "Dejar vacío para mantener la actual"
+                    : "Contraseña a proteger"
+                }
+                placeholderTextColor={COLORS.textMuted}
+                secureTextEntry={!mostrarPass}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <TouchableOpacity
+                onPress={() => setMostrarPass((v) => !v)}
+                style={{ padding: 4 }}
+              >
+                <Ionicons
+                  name={mostrarPass ? "eye-off-outline" : "eye-outline"}
+                  size={20}
+                  color={COLORS.textMuted}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* Indicador de fuerza (solo si se esta escribiendo contraseña) */}
+            {contrasena.length > 0 && fuerza !== "vacia" && (
+              <View style={styles.fuerzaContainer}>
+                <View style={styles.fuerzaBarras}>
+                  {[1, 2, 3].map((i) => (
+                    <View
+                      key={i}
+                      style={[
+                        styles.fuerzaBarra,
+                        {
+                          backgroundColor:
+                            i <= FUERZA_CONFIG[fuerza].barras
+                              ? FUERZA_CONFIG[fuerza].color
+                              : COLORS.border,
+                        },
+                      ]}
+                    />
+                  ))}
+                </View>
+                <Text
+                  style={[
+                    styles.fuerzaLabel,
+                    { color: FUERZA_CONFIG[fuerza].color },
+                  ]}
+                >
+                  {FUERZA_CONFIG[fuerza].label}
                 </Text>
-              )}
-            </TouchableOpacity>
-          </View>
+              </View>
+            )}
+
+            {/* Botones de accion */}
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={handleCerrar}
+                disabled={guardando}
+              >
+                <Text style={styles.modalCancelText}>Cancelar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.modalGuardarBtn,
+                  guardando && styles.modalBtnDisabled,
+                ]}
+                onPress={handleGuardar}
+                disabled={guardando}
+              >
+                {guardando ? (
+                  <ActivityIndicator color={COLORS.white} size="small" />
+                ) : (
+                  <Text style={styles.modalGuardarText}>
+                    {esEdicion ? "Actualizar" : "Guardar"}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </Modal>
   );
 }
@@ -292,6 +334,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 
+  backdropTouchArea: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+
   modalContent: {
     backgroundColor: COLORS.surface,
     borderTopLeftRadius: 24,
@@ -300,7 +350,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     paddingHorizontal: 22,
     paddingTop: 20,
-    paddingBottom: Platform.OS === "ios" ? 40 : 26,
+    maxHeight: "85%",
   },
 
   modalHeader: {
