@@ -7,6 +7,7 @@
  * 3. Limpieza manual inmediata (al bloquear la boveda o cerrar sesion)
  */
 
+import { requireNativeModule } from "expo";
 import { AppState, AppStateStatus } from "react-native";
 import * as Clipboard from "expo-clipboard";
 
@@ -14,6 +15,13 @@ interface CopiaInfo {
   texto: string;
   timestamp: number;
   duracionMs: number;
+}
+
+let ClipboardNative: any = null;
+try {
+  ClipboardNative = requireNativeModule("ExpoClipboard");
+} catch {
+  ClipboardNative = null;
 }
 
 class ClipboardService {
@@ -96,8 +104,8 @@ class ClipboardService {
     this.ultimaCopia = null;
 
     try {
-      if (typeof (Clipboard as any).clearAsync === "function") {
-        await (Clipboard as any).clearAsync();
+      if (typeof ClipboardNative?.clearAsync === "function") {
+        await ClipboardNative.clearAsync();
       } else {
         await Clipboard.setStringAsync("");
       }

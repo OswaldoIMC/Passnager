@@ -1,15 +1,21 @@
 diff --git a/node_modules/expo-clipboard/android/src/main/java/expo/modules/clipboard/ClipboardModule.kt b/node_modules/expo-clipboard/android/src/main/java/expo/modules/clipboard/ClipboardModule.kt
-index aad412e..fb151db 100644
+index aad412e..be5bb73 100644
 --- a/node_modules/expo-clipboard/android/src/main/java/expo/modules/clipboard/ClipboardModule.kt
 +++ b/node_modules/expo-clipboard/android/src/main/java/expo/modules/clipboard/ClipboardModule.kt
-@@ -54,10 +54,24 @@ class ClipboardModule : Module() {
+@@ -5,6 +5,7 @@ import android.content.ClipData
+ import android.content.ClipDescription
+ import android.content.ClipboardManager
+ import android.os.Build
++import android.os.PersistableBundle
+ import android.text.Html
+ import android.text.Html.FROM_HTML_MODE_LEGACY
+ import android.text.Spanned
+@@ -54,10 +55,22 @@ class ClipboardModule : Module() {
            ClipData.newHtmlText(null, plainText, content)
          }
        }
-+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-+        clip.description.extras = android.os.PersistableBundle().apply {
-+          putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
-+        }
++      clip.description.extras = PersistableBundle().apply {
++        putBoolean("android.content.extra.IS_SENSITIVE", true)
 +      }
        clipboardManager.setPrimaryClip(clip)
        return@AsyncFunction true
