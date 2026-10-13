@@ -11,11 +11,13 @@ import {
   Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { Credencial } from "../types";
 import { COLORS } from "../constants/colors";
 import { useBoveda } from "../context/BovedaContext";
 import { passwordService } from "../services/passwordService";
 import { clipboardService } from "../services/clipboardService";
+import CustomAlert from "./CustomAlert";
 
 interface Props {
   credencial: Credencial;
@@ -42,6 +44,13 @@ export default function PasswordCard({
   const [escalaAnim] = useState(() => new Animated.Value(1));
   const timeoutOcultarRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Estado para el aviso de seguridad del portapapeles
+  const [avisoVisible, setAvisoVisible] = useState(false);
+  const copiaPendienteRef = useRef<(() => Promise<void>) | null>(null);
+
+  // Clave para AsyncStorage
+  const AVISO_CLIPBOARD_KEY = "@passnager/aviso_clipboard_visto";
+
   useEffect(() => {
     return () => {
       if (timeoutOcultarRef.current) clearTimeout(timeoutOcultarRef.current);
@@ -59,7 +68,9 @@ export default function PasswordCard({
   }
 
   // ----- Copiar contraseña al portapapeles -----
-  async function handleCopiar() {
+  const SEGUNDOS_BORRADO = 30;
+
+  async function ejecutarCopia() {
     if (!claveMaestra) return;
 
     try {
@@ -71,7 +82,7 @@ export default function PasswordCard({
       );
 
       // Copiar con el servicio seguro (con timer y soporte de AppState en segundo plano)
-      await clipboardService.copiarContrasena(contrasenaPlana, 30);
+      await clipboardService.copiarContrasena(contrasenaPlana, SEGUNDOS_BORRADO);
 
       // Feedback visual y animacion
       setCopiado(true);
@@ -100,6 +111,39 @@ export default function PasswordCard({
       console.error("[PasswordCard] Error al copiar:", e);
     } finally {
       setCargando(false);
+    }
+  }
+
+  async function handleCopiar() {
+    try {
+      const yaVisto = await AsyncStorage.getItem(AVISO_CLIPBOARD_KEY);
+      if (yaVisto === "true") {
+        // Ya acepto el aviso, copiar directamente
+        await ejecutarCopia();
+      } else {
+        // Mostrar aviso de seguridad por primera vez
+        copiaPendienteRef.current = ejecutarCopia;
+        setAvisoVisible(true);
+      }
+    } catch {
+      // Si falla la lectura, copiar directamente
+      await ejecutarCopia();
+    }
+  }
+
+  async function handleAvisoAceptar() {
+    setAvisoVisible(false);
+    if (copiaPendienteRef.current) {
+      await copiaPendienteRef.current();
+      copiaPendienteRef.current = null;
+    }
+  }
+
+  async function handleAvisoDontShowAgain(checked: boolean) {
+    if (checked) {
+      await AsyncStorage.setItem(AVISO_CLIPBOARD_KEY, "true");
+    } else {
+      await AsyncStorage.removeItem(AVISO_CLIPBOARD_KEY);
     }
   }
 
@@ -236,6 +280,32 @@ export default function PasswordCard({
           </TouchableOpacity>
         </Animated.View>
       </View>
+
+      {/* Aviso de seguridad del portapapeles (primera vez) */}
+      <CustomAlert
+        visible={avisoVisible}
+        onClose={() => {
+          setAvisoVisible(false);
+          copiaPendienteRef.current = null;
+        }}
+        title="Aviso de seguridad"
+        message={`Al copiar la contraseña, el teclado o el sistema de tu teléfono podría guardarla en texto plano. Se intentará borrar en ${SEGUNDOS_BORRADO} segundos, pero el historial podría conservarla. Para mayor seguridad, puedes desactivar el historial del portapapeles en los ajustes de tu teclado.`}
+        icon="shield-half-outline"
+        accentColor={COLORS.warning}
+        buttons={[
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          {
+            text: "Entendido, copiar",
+            style: "primary",
+            onPress: handleAvisoAceptar,
+          },
+        ]}
+        showDontAskAgain
+        onDontAskAgainChange={handleAvisoDontShowAgain}
+      />
     </View>
   );
 }

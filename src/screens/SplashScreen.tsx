@@ -93,7 +93,7 @@ export default function SplashScreen({ navigation }: Props) {
       <Text
         style={[styles.version, { bottom: Math.max(insets.bottom + 16, 28) }]}
       >
-        v0.1.3
+        v0.1.4
       </Text>
     </View>
   );

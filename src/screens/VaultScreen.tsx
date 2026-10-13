@@ -9,7 +9,6 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
-  Alert,
   RefreshControl,
   Animated,
 } from "react-native";
@@ -26,6 +25,7 @@ import { passwordService } from "../services/passwordService";
 import { clipboardService } from "../services/clipboardService";
 import PasswordCard from "../components/PasswordCard";
 import ModalCredencial from "../components/ModalCredencial";
+import CustomAlert from "../components/CustomAlert";
 
 type Props = StackScreenProps<RootStackParamList, "Vault">;
 
@@ -48,6 +48,14 @@ export default function VaultScreen({ navigation }: Props) {
   const [credencialEditando, setCredencialEditando] =
     useState<Credencial | null>(null);
 
+  // Estado para alertas personalizadas
+  const [alertEliminar, setAlertEliminar] = useState<{
+    visible: boolean;
+    id: string;
+    etiqueta: string;
+  }>({ visible: false, id: "", etiqueta: "" });
+  const [alertCerrarSesion, setAlertCerrarSesion] = useState(false);
+
   // Redirigir a Login si la boveda no esta desbloqueada o no hay clave
   useEffect(() => {
     if (!estaDesbloqueada || !claveMaestra) {
@@ -62,7 +70,7 @@ export default function VaultScreen({ navigation }: Props) {
       setCredenciales(lista);
     } catch (e) {
       console.error("[VaultScreen] Error cargando credenciales:", e);
-      Alert.alert("Error", "No se pudieron cargar las contraseñas.");
+      // Alert.alert("Error", "No se pudieron cargar las contraseñas.");
     } finally {
       setCargando(false);
       setRefrescando(false);
@@ -105,45 +113,29 @@ export default function VaultScreen({ navigation }: Props) {
 
   // ----- Eliminar credencial con confirmacion -----
   function handleEliminar(id: string, etiqueta: string) {
-    Alert.alert(
-      "Eliminar credencial",
-      `¿Deseas eliminar la contraseña de "${etiqueta}"? Esta acción no se puede deshacer.`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await passwordService.deletePassword(id);
-              setCredenciales((prev) => prev.filter((c) => c.id !== id));
-            } catch {
-              Alert.alert("Error", "No se pudo eliminar la credencial.");
-            }
-          },
-        },
-      ],
-    );
+    setAlertEliminar({ visible: true, id, etiqueta });
+  }
+
+  async function confirmarEliminar() {
+    const { id } = alertEliminar;
+    try {
+      await passwordService.deletePassword(id);
+      setCredenciales((prev) => prev.filter((c) => c.id !== id));
+    } catch {
+      // Silenciar error, el usuario puede reintentar
+      // Alert.alert("Error", "No se pudo eliminar la credencial.");
+    }
   }
 
   // ----- Cerrar sesion -----
   function handleCerrarSesion() {
-    Alert.alert(
-      "Cerrar sesión",
-      "¿Seguro que deseas bloquear la bóveda y salir?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Bloquear Bóveda",
-          style: "destructive",
-          onPress: () => {
-            clipboardService.limpiarPortapapeles();
-            cerrarSesion();
-            navigation.replace("LoginBoveda");
-          },
-        },
-      ],
-    );
+    setAlertCerrarSesion(true);
+  }
+
+  function confirmarCerrarSesion() {
+    clipboardService.limpiarPortapapeles();
+    cerrarSesion();
+    navigation.replace("LoginBoveda");
   }
 
   // ----- Editar credencial -----
@@ -331,6 +323,48 @@ export default function VaultScreen({ navigation }: Props) {
         }}
         onSaved={handleModalSaved}
         credencialEditar={credencialEditando}
+      />
+
+      {/* Alerta personalizada: Eliminar credencial */}
+      <CustomAlert
+        visible={alertEliminar.visible}
+        onClose={() => setAlertEliminar((p) => ({ ...p, visible: false }))}
+        title="Eliminar credencial"
+        message={`¿Deseas eliminar la contraseña de "${alertEliminar.etiqueta}"? Esta acción no se puede deshacer.`}
+        icon="trash-outline"
+        accentColor={COLORS.danger}
+        buttons={[
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          {
+            text: "Eliminar",
+            style: "destructive",
+            onPress: confirmarEliminar,
+          },
+        ]}
+      />
+
+      {/* Alerta personalizada: Cerrar sesion */}
+      <CustomAlert
+        visible={alertCerrarSesion}
+        onClose={() => setAlertCerrarSesion(false)}
+        title="Cerrar sesión"
+        message="¿Seguro que deseas bloquear la bóveda y salir?"
+        icon="log-out-outline"
+        accentColor={COLORS.warning}
+        buttons={[
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          {
+            text: "Bloquear Bóveda",
+            style: "destructive",
+            onPress: confirmarCerrarSesion,
+          },
+        ]}
       />
     </SafeAreaView>
   );

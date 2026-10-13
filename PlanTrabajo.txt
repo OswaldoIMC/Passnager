@@ -1,5 +1,5 @@
 ================================================================================
-                    PLAN DE TRABAJO - APP GESTOR DE CONTRASEÑAS "BÓVEDA"
+            PLAN DE TRABAJO - APP GESTOR DE CONTRASEÑAS "BÓVEDA"
 ================================================================================
 
 1. INFORMACIÓN DEL PROYECTO
@@ -12,7 +12,7 @@ Duración estimada: 4-5 semanas
 Equipo: 1 Dev (tú)
 
 
-2. ESTRUCTURA DEL PROYECTO
+2. ESTRUCTURA DEL PROYECTO                                            COMPLETADO
 ================================================================================
 
 Nota: hooks/ no se va a usar para custom hooks, se mantiene la carpeta para posible migración a MVVM.
@@ -45,7 +45,7 @@ boveda-app/
 └── app.json
 
 
-3. STACK TECNOLÓGICO FINAL
+3. STACK TECNOLÓGICO FINAL                                            COMPLETADO
 ================================================================================
 
 DEPENDENCIAS PRINCIPALES:
@@ -67,7 +67,7 @@ DEPENDENCIAS PRINCIPALES:
 }
 
 
-4. ESTRUCTURA DE DATOS
+4. ESTRUCTURA DE DATOS                                                COMPLETADO
 ================================================================================
 
 TIPOS PRINCIPALES:
@@ -299,7 +299,7 @@ Objetivo: Mejorar UX y seguridad
 
 TAREAS:
 
-1. Limpiar memoria después de X tiempo inactivo
+1. Limpiar memoria después de X tiempo inactivo          - Pendiente
    Duración: 3h
    Prioridad: CRÍTICO
    Descripción: Cerrar sesión automática después 5 min
@@ -329,12 +329,12 @@ TAREAS:
    Prioridad: MEDIA
    Descripción: Polish visual de la app
 
-7. Testing completo (casos borde)
+7. Testing completo (casos borde)                      - Pendiente
    Duración: 4h
    Prioridad: ALTA
    Descripción: QA exhaustivo
 
-8. Documentación y cleanup código
+8. Documentación y cleanup código                      - Pendiente
    Duración: 2h
    Prioridad: MEDIA
    Descripción: Comentarios y refactorización
@@ -343,7 +343,7 @@ ENTREGABLE: App completamente funcional y pulida
 TOTAL HORAS: 20h
 
 
-6. FLUJO DE USUARIO DETALLADO
+6. FLUJO DE USUARIO DETALLADO                                         COMPLETADO
 ================================================================================
 
 FLUJO 1: PRIMERA VEZ (Setup)
@@ -425,7 +425,7 @@ Auto-limpia clipboard después 30 seg
 Elimina de memoria
 
 
-7. COMPONENTES DETALLADOS
+7. COMPONENTES DETALLADOS                                             COMPLETADO
 ================================================================================
 
 SetupBoveda.tsx
@@ -477,7 +477,7 @@ AddPasswordScreen.tsx
 ✓ Validaciones antes guardar
 
 
-8. SERVICIOS CORE (LÓGICA)
+8. SERVICIOS CORE (LÓGICA)                                            COMPLETADO
 ================================================================================
 
 cryptoService.ts
@@ -606,7 +606,7 @@ Semana 4 → ➕ Agregar nuevas contraseñas
 Semana 5 → 🎨 Pulido, testing, deploy
 
 
-11. DEPENDENCIAS & INSTALACIÓN
+11. DEPENDENCIAS & INSTALACIÓN                                        COMPLETADO
 ================================================================================
 
 # Crear proyecto
