@@ -62,7 +62,7 @@ export default function SplashScreen({ navigation }: Props) {
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [logoOpacity, logoScale, navigation, textOpacity]);
 
   return (
     <View style={styles.container}>

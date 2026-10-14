@@ -61,7 +61,7 @@ export default function VaultScreen({ navigation }: Props) {
     if (!estaDesbloqueada || !claveMaestra) {
       navigation.replace("LoginBoveda");
     }
-  }, [estaDesbloqueada, claveMaestra]);
+  }, [estaDesbloqueada, claveMaestra, navigation]);
 
   // ----- Cargar credenciales desde storage -----
   const cargarCredenciales = useCallback(async () => {
@@ -78,8 +78,27 @@ export default function VaultScreen({ navigation }: Props) {
   }, []);
 
   useEffect(() => {
-    cargarCredenciales();
-  }, [cargarCredenciales]);
+    let cancelado = false;
+    async function init() {
+      try {
+        const lista = await passwordService.getPasswords();
+        if (!cancelado) {
+          setCredenciales(lista);
+        }
+      } catch (e) {
+        console.error("[VaultScreen] Error cargando credenciales:", e);
+      } finally {
+        if (!cancelado) {
+          setCargando(false);
+          setRefrescando(false);
+        }
+      }
+    }
+    init();
+    return () => {
+      cancelado = true;
+    };
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefrescando(true);

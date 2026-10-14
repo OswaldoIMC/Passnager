@@ -75,21 +75,19 @@ export default function ModalCredencial({
     };
   }, []);
 
-  // Reiniciar formulario cuando el modal se abre o cambia de modo
-  useEffect(() => {
+  // Sincronizar estado del formulario cuando cambian las props
+  const [prevVisible, setPrevVisible] = useState(visible);
+  const [prevCredencialEditar, setPrevCredencialEditar] = useState(credencialEditar);
+
+  if (visible !== prevVisible || credencialEditar !== prevCredencialEditar) {
+    setPrevVisible(visible);
+    setPrevCredencialEditar(credencialEditar);
     if (visible) {
-      if (credencialEditar) {
-        // Modo edicion: pre-llenar etiqueta, contraseña vacia
-        setEtiqueta(credencialEditar.etiqueta);
-        setContrasena("");
-      } else {
-        // Modo agregar: todo vacio
-        setEtiqueta("");
-        setContrasena("");
-      }
+      setEtiqueta(credencialEditar ? credencialEditar.etiqueta : "");
+      setContrasena("");
       setMostrarPass(false);
     }
-  }, [visible, credencialEditar]);
+  }
 
   const fuerza = calcularFuerza(contrasena);
 

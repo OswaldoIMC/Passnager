@@ -790,16 +790,16 @@ SECURITY.md
 ================================================================================
 
 CODE QUALITY:
-  ☐ Código limpio (ESLint pass)
-  ☐ Tipos TypeScript correctos
-  ☐ Funciones documentadas
-  ☐ Sin console.logs sensibles
+  ✓ Código limpio (ESLint pass)
+  ✓ Tipos TypeScript correctos
+  ✓ Funciones documentadas
+  ✓ Sin console.logs sensibles
 
 FUNCIONALIDAD:
-  ☐ Todos los flujos probados
+  ✓ Todos los flujos probados
   ☐ Manejo de errores completo
   ☐ Edge cases cubiertos
-  ☐ Performance aceptable
+  ✓ Performance aceptable
 
 SEGURIDAD:
   ☐ Sin hardcoded secrets
@@ -808,10 +808,10 @@ SEGURIDAD:
   ☐ Permisos mínimos necesarios
 
 COMPILACIÓN:
-  ☐ Builds sin warnings
-  ☐ APK/IPA generan correctamente
-  ☐ Tamaño de app aceptable
-  ☐ Funciona en dispositivos reales
+  ✓ Builds sin warnings
+  ✓ APK/IPA generan correctamente
+  ✓ Tamaño de app aceptable
+  ✓ Funciona en dispositivos reales
 
 
 20. ESTRUCTURA DE COMMITS
