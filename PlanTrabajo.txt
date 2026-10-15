@@ -736,7 +736,7 @@ Mitigación:
   • Profiling de memoria
 
 
-17. TESTING STRATEGY
+17. TESTING STRATEGY                                                  COMPLETADO
 ================================================================================
 
 UNITARIOS (cryptoService.ts):
@@ -759,7 +759,7 @@ SEGURIDAD:
   ✓ No se puede copiar contraseña sin estar logged
   ✓ Hash no se repite
   ✓ Clipboard se limpia
-  ✓ Máx 3 intentos fallidos
+  ✓ Máx 5 intentos fallidos
 
 
 18. DOCUMENTACIÓN NECESARIA
