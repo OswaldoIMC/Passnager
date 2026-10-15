@@ -11,8 +11,11 @@ Stack Recomendado: React Native + TypeScript
 Duración estimada: 4-5 semanas
 Equipo: 1 Dev (tú)
 
+Glosario:
+  ✓ = completado
+  PENDIENTE = pendiente para futura actualización
 
-2. ESTRUCTURA DEL PROYECTO                                            COMPLETADO
+2. ESTRUCTURA DEL PROYECTO                                                    ✓
 ================================================================================
 
 Nota: hooks/ no se va a usar para custom hooks, se mantiene la carpeta para posible migración a MVVM.
@@ -45,7 +48,7 @@ boveda-app/
 └── app.json
 
 
-3. STACK TECNOLÓGICO FINAL                                            COMPLETADO
+3. STACK TECNOLÓGICO FINAL                                                    ✓
 ================================================================================
 
 DEPENDENCIAS PRINCIPALES:
@@ -67,7 +70,7 @@ DEPENDENCIAS PRINCIPALES:
 }
 
 
-4. ESTRUCTURA DE DATOS                                                COMPLETADO
+4. ESTRUCTURA DE DATOS                                                        ✓
 ================================================================================
 
 TIPOS PRINCIPALES:
@@ -91,7 +94,7 @@ interface EstadoBoveda {
 5. PLAN POR SPRINTS
 ================================================================================
 
-SPRINT 1: SETUP & NAVEGACIÓN (Semana 1)                               COMPLETADO
+SPRINT 1: SETUP & NAVEGACIÓN (Semana 1)                                       ✓
 ================================================================================
 
 Objetivo: Estructura base funcional sin seguridad
@@ -132,7 +135,7 @@ ENTREGABLE: App navega entre pantallas, UI básica funcional
 TOTAL HORAS: 16h
 
 
-SPRINT 2: ALMACENAMIENTO & SEGURIDAD (Semana 2)                       COMPLETADO
+SPRINT 2: ALMACENAMIENTO & SEGURIDAD (Semana 2)                               ✓
 ================================================================================
 
 Objetivo: Guardar y validar contraseña maestra
@@ -185,7 +188,7 @@ ENTREGABLE: Puedes crear contraseña maestra y loguearte
 TOTAL HORAS: 19h
 
 
-SPRINT 3: CRUD DE CREDENCIALES (Semana 3)                             COMPLETADO
+SPRINT 3: CRUD DE CREDENCIALES (Semana 3)                                     ✓
 ================================================================================
 
 Objetivo: Guardar y mostrar contraseñas
@@ -241,7 +244,7 @@ ENTREGABLE: Ves lista de contraseñas guardadas y puedes copiarlas
 TOTAL HORAS: 17h
 
 
-SPRINT 4: AGREGAR CONTRASEÑAS (Semana 4)                              COMPLETADO
+SPRINT 4: AGREGAR CONTRASEÑAS (Semana 4)                                      ✓
 ================================================================================
 
 Objetivo: Crear y guardar nuevas credenciales
@@ -299,7 +302,7 @@ Objetivo: Mejorar UX y seguridad
 
 TAREAS:
 
-1. Limpiar memoria después de X tiempo inactivo          - Pendiente
+1. Limpiar memoria después de X tiempo inactivo          - PENDIENTE
    Duración: 3h
    Prioridad: CRÍTICO
    Descripción: Cerrar sesión automática después 5 min
@@ -329,12 +332,12 @@ TAREAS:
    Prioridad: MEDIA
    Descripción: Polish visual de la app
 
-7. Testing completo (casos borde)                      - Pendiente
+7. Testing completo (casos borde)
    Duración: 4h
    Prioridad: ALTA
    Descripción: QA exhaustivo
 
-8. Documentación y cleanup código                      - Pendiente
+8. Documentación y cleanup código
    Duración: 2h
    Prioridad: MEDIA
    Descripción: Comentarios y refactorización
@@ -343,7 +346,7 @@ ENTREGABLE: App completamente funcional y pulida
 TOTAL HORAS: 20h
 
 
-6. FLUJO DE USUARIO DETALLADO                                         COMPLETADO
+6. FLUJO DE USUARIO DETALLADO                                                 ✓
 ================================================================================
 
 FLUJO 1: PRIMERA VEZ (Setup)
@@ -425,7 +428,7 @@ Auto-limpia clipboard después 30 seg
 Elimina de memoria
 
 
-7. COMPONENTES DETALLADOS                                             COMPLETADO
+7. COMPONENTES DETALLADOS                                                     ✓
 ================================================================================
 
 SetupBoveda.tsx
@@ -477,7 +480,7 @@ AddPasswordScreen.tsx
 ✓ Validaciones antes guardar
 
 
-8. SERVICIOS CORE (LÓGICA)                                            COMPLETADO
+8. SERVICIOS CORE (LÓGICA)                                                    ✓
 ================================================================================
 
 cryptoService.ts
@@ -567,36 +570,36 @@ export class PasswordService {
 }
 
 
-9. SEGURIDAD - CHECKLIST IMPLEMENTACIÓN
+9. SEGURIDAD - CHECKLIST IMPLEMENTACIÓN                                PENDIENTE
 ================================================================================
 
 ✅ CONTRASEÑA MAESTRA:
-  ☐ Derivada con Argon2id (no MD5/SHA1)
-  ☐ Salt aleatorio de 16 bytes
-  ☐ Stored hash + salt (no la contraseña)
-  ☐ Máximo 5 intentos fallidos
+  ✓ Derivada con Argon2id (no MD5/SHA1)
+  ✓ Salt aleatorio de 16 bytes
+  ✓ Stored hash + salt (no la contraseña)
+  ✓ Máximo 5 intentos fallidos
 
 
 ✅ ALMACENAMIENTO:
   ☐ AsyncStorage encriptado (Android: EncryptedSharedPreferences)
-  ☐ Cada contraseña encriptada individualmente
-  ☐ No guardar contraseña maestra en memoria permanente
+  ✓ Cada contraseña encriptada individualmente
+  ✓ No guardar contraseña maestra en memoria permanente
 
 
 ✅ MEMORIA:
-  ☐ Limpiar variables sensibles después de usar
+  ✓ Limpiar variables sensibles después de usar
   ☐ Cerrar sesión si > 5 min inactividad
-  ☐ Eliminar clipboard después 30 seg
+  ✓ Eliminar clipboard después 30 seg
 
 
 ✅ VALIDACIONES:
-  ☐ No permitir campos vacíos
-  ☐ Mínimo 8 caracteres en contraseña maestra
-  ☐ Validar formato antes encriptar
+  ✓ No permitir campos vacíos
+  ✓ Mínimo 8 caracteres en contraseña maestra
+  ✓ Validar formato antes encriptar
   ☐ No guardar duplicados (mismo nombre)
 
 
-10. HITOS & MILESTONES
+10. HITOS & MILESTONES                                                        ✓
 ================================================================================
 
 Semana 1 → ✅ Estructura base, navegación funcional
@@ -606,7 +609,7 @@ Semana 4 → ➕ Agregar nuevas contraseñas
 Semana 5 → 🎨 Pulido, testing, deploy
 
 
-11. DEPENDENCIAS & INSTALACIÓN                                        COMPLETADO
+11. DEPENDENCIAS & INSTALACIÓN                                                ✓
 ================================================================================
 
 # Crear proyecto
@@ -623,7 +626,7 @@ npm install react-native-clipboard
 npm install --save-dev jest @types/jest
 
 
-12. COMANDOS DEL PROYECTO
+12. COMANDOS DEL PROYECTO                                                     ✓
 ================================================================================
 
 # Desarrollo
@@ -639,7 +642,7 @@ npm run lint                # Valida código
 eas build                   # Compilar para producción
 
 
-13. PRÓXIMOS PASOS (DESPUÉS DEL MVP)
+13. PRÓXIMOS PASOS (DESPUÉS DEL MVP)                                   PENDIENTE
 ================================================================================
 
 🚀 FASE 2 (Opcional):
@@ -659,7 +662,7 @@ eas build                   # Compilar para producción
   • Publicar en App Store/Play Store
 
 
-14. RESUMEN EJECUTIVO
+14. RESUMEN EJECUTIVO                                                         ✓
 ================================================================================
 
 TIEMPO:                 4-5 semanas (1 dev)
@@ -670,7 +673,7 @@ TESTS:                  Críticos para seguridad
 TOTAL HORAS ESTIMADAS:  87 horas
 
 
-15. MATRIZ DE PRIORIDADES
+15. MATRIZ DE PRIORIDADES                                                     ✓
 ================================================================================
 
 🔴 CRÍTICO (Must Have):
@@ -695,7 +698,7 @@ TOTAL HORAS ESTIMADAS:  87 horas
   • Tema oscuro
 
 
-16. RIESGOS Y MITIGACIÓN
+16. RIESGOS Y MITIGACIÓN                                                      ✓
 ================================================================================
 
 RIESGO 1: Vulnerabilidad en criptografía
@@ -736,7 +739,7 @@ Mitigación:
   • Profiling de memoria
 
 
-17. TESTING STRATEGY                                                  COMPLETADO
+17. TESTING STRATEGY                                                          ✓
 ================================================================================
 
 UNITARIOS (cryptoService.ts):
@@ -762,7 +765,7 @@ SEGURIDAD:
   ✓ Máx 5 intentos fallidos
 
 
-18. DOCUMENTACIÓN NECESARIA
+18. DOCUMENTACIÓN NECESARIA                                                   ✓
 ================================================================================
 
 README.md
@@ -786,7 +789,7 @@ SECURITY.md
   • Limitaciones conocidas
 
 
-19. CHECKLIST PRE-LANZAMIENTO
+19. CHECKLIST PRE-LANZAMIENTO                                                 ✓
 ================================================================================
 
 CODE QUALITY:
@@ -797,15 +800,15 @@ CODE QUALITY:
 
 FUNCIONALIDAD:
   ✓ Todos los flujos probados
-  ☐ Manejo de errores completo
-  ☐ Edge cases cubiertos
+  ✓ Manejo de errores completo
+  ✓ Edge cases cubiertos
   ✓ Performance aceptable
 
 SEGURIDAD:
-  ☐ Sin hardcoded secrets
-  ☐ Criptografía auditada
-  ☐ Memory sanitization OK
-  ☐ Permisos mínimos necesarios
+  ✓ Sin hardcoded secrets
+  ✓ Criptografía auditada
+  ✓ Memory sanitization OK
+  ✓ Permisos mínimos necesarios
 
 COMPILACIÓN:
   ✓ Builds sin warnings
@@ -814,7 +817,7 @@ COMPILACIÓN:
   ✓ Funciona en dispositivos reales
 
 
-20. ESTRUCTURA DE COMMITS
+20. ESTRUCTURA DE COMMITS                                                     ✓
 ================================================================================
 
 feat: Implementar cryptoService con Argon2id
